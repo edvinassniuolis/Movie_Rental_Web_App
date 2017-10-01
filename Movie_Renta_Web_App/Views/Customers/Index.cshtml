@@ -1,0 +1,21 @@
+﻿@model Movie_Renta_Web_App.ViewModels.IndexCustomerModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var customerCount = Model.Customers.Count;
+}
+<table table-bordered table-hover style="border: 1px solid black">
+    <thead>Customers</thead>
+    @foreach (var i in Model.Customers)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(i.Name, "Details", "Customers", new { id = i.Id }, null)
+            </td>
+        </tr>
+    }
+</table>
+
+

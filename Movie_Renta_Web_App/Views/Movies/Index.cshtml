@@ -1,0 +1,17 @@
+﻿@model Movie_Renta_Web_App.ViewModels.IndexMovieModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table table-bordered table-hover>
+    <thead>Movies</thead>
+    @foreach (var i in Model.Movies)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(i.Name, "Details", "Movies", new {id = i.Id}, null)
+            </td>
+        </tr>
+    }
+</table>

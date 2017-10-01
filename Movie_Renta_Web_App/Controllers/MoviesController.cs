@@ -1,50 +1,36 @@
 ﻿using Movie_Renta_Web_App.Models;
-using System;
+using Movie_Renta_Web_App.ViewModels;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace Movie_Renta_Web_App.Controllers
 {
     public class MoviesController : Controller
     {
-        // GET: Movies
-        public ActionResult Random()
+        private List<Movie> movies = new List<Movie>
         {
-            var movie = new Movie() {Id = 2, Name = "CARS"};
-            var customers = new List<Customer>
-            {
-                new Customer() { Id = 1, Name = "alex"},
-                new Customer() {Id = 2, Name = "Sabina"}
-            };
-            var viewModel = new RandomMovieViewModel()
-            {
-                Movie = movie,
-                Customers = customers
-            };
+            new Movie() { Id = 1, Name = "Cassablanca"},
+            new Movie() { Id = 2, Name = "Cars"}
+    };
 
-            return View(viewModel);
+        public ActionResult Index()
+        {
+
+            var moviesViewModel = new IndexMovieModel { Movies = movies };
+
+            return View(moviesViewModel);
         }
 
-        public ActionResult Edit(int id)
+        [Route("movies/details/{id}")]
+        public ActionResult Details(int id)
         {
-            return Content("id = " + id);
-        }
+            var movie = movies.FirstOrDefault((m) => m.Id == id);
 
-        public ActionResult Index(int? pageIndex, string sortBy)
-        {
-            if (!pageIndex.HasValue)
-                pageIndex = 1;
+            if (movie == null)
+                return HttpNotFound();
 
-            if (String.IsNullOrWhiteSpace(sortBy))
-                sortBy = "Name";
-
-            return Content($"pageIndex={pageIndex}&sortBy={sortBy}");
-        }
-
-        [Route("movies/released/{year:regex(\\d{4}}/{month:regex(\\d{2}:range(1, 12))}")]
-        public ActionResult ByReleaseDate(int year, int month)
-        {
-            return Content(year + "/" + month);
+            return View(movie);
         }
     }
 }
