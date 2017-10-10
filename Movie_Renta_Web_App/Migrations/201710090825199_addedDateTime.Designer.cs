@@ -7,13 +7,13 @@ namespace Movie_Renta_Web_App.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class addmigrationInitModel : IMigrationMetadata
+    public sealed partial class addedDateTime : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(addmigrationInitModel));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(addedDateTime));
         
         string IMigrationMetadata.Id
         {
-            get { return "201710012058326_add-migration InitModel"; }
+            get { return "201710090825199_addedDateTime"; }
         }
         
         string IMigrationMetadata.Source

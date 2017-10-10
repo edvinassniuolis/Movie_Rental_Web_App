@@ -1,6 +1,6 @@
 ﻿using Movie_Renta_Web_App.Models;
 using Movie_Renta_Web_App.ViewModels;
-using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -8,22 +8,75 @@ namespace Movie_Renta_Web_App.Controllers
 {
     public class CustomersController : Controller
     {
-        private List<Customer> customers = new List<Customer>
+        private ApplicationDbContext _context;
+
+        public CustomersController()
         {
-            new Customer() { Id = 1, Name = "James"},
-            new Customer() { Id = 2, Name = "John"}
-        };
+            _context = new ApplicationDbContext();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
+
         public ActionResult Index()
         {
-            var customerModel = new IndexCustomerModel {Customers = customers};
+            var customerModel = new IndexCustomerModel { Customers = _context.Customers.Include(c => c.MembershipType).ToList() };
             return View(customerModel);
+        }
+
+        [HttpPost]
+        public ActionResult Save(Customer customer)
+        {
+            if (customer.Id == 0)
+                _context.Customers.Add(customer);
+
+            else
+            {
+                var customerInDb = _context.Customers.Single(c => c.Id == customer.Id);
+
+                customerInDb.Name = customer.Name;
+                customerInDb.Birthdate = customer.Birthdate;
+                customerInDb.MembershipTypeId = customer.MembershipTypeId;
+                customerInDb.IsSubscribedToNewsLetter = customerInDb.IsSubscribedToNewsLetter;
+            }
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Customers");
         }
 
         [Route("customers/details/{id}")]
         public ActionResult Details(int id)
         {
-            var customer = customers.FirstOrDefault((m) => m.Id == id);
+            var customer = _context.Customers.Include(c => c.MembershipType).FirstOrDefault((c) => c.Id == id);
             return View(customer);
+        }
+
+        public ActionResult New()
+        {
+            var membershipTypes = _context.MembershipTypes.ToList();
+            var viewModel = new CustomerFroViewModel
+            {
+                MembershipTypes = membershipTypes
+            };
+
+            return View("CustomerFor", viewModel);
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
+
+            if (customer == null)
+                return HttpNotFound();
+
+            var customerFormModel = new CustomerFroViewModel
+            {
+                Customer = customer,
+                MembershipTypes = _context.MembershipTypes.ToList()
+            };
+            return View("CustomerFor", customerFormModel);
         }
     }
 }
