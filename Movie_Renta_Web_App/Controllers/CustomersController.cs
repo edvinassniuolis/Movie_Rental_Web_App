@@ -26,9 +26,21 @@ namespace Movie_Renta_Web_App.Controllers
             return View(customerModel);
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult Save(Customer customer)
         {
+            if (!ModelState.IsValid)
+            {
+                var customerView = new CustomerFroViewModel
+                {
+                    Customer = customer,
+                    MembershipTypes = _context.MembershipTypes.ToList()
+                };
+
+                return View("CustomerFor", customerView);
+            }
+
             if (customer.Id == 0)
                 _context.Customers.Add(customer);
 
@@ -58,6 +70,7 @@ namespace Movie_Renta_Web_App.Controllers
             var membershipTypes = _context.MembershipTypes.ToList();
             var viewModel = new CustomerFroViewModel
             {
+                Customer = new Customer(),
                 MembershipTypes = membershipTypes
             };
 

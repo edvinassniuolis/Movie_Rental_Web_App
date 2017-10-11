@@ -44,18 +44,30 @@ namespace Movie_Renta_Web_App.Controllers
 
         public ActionResult New()
         {
+
             var movies = _context.Movies.Include(m => m.Genre).ToList();
 
             var movieViewModel = new NewMovieViewModel
             {
+                Movie = new Movie() { Stock = 0 },
                 GenreTypes = _context.Genres.ToList()
             };
             return View("New", movieViewModel);
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult Save(Movie movie)
         {
+            if (!ModelState.IsValid)
+            {
+                var moviesView = new NewMovieViewModel
+                {
+                    Movie = movie,
+                    GenreTypes = _context.Genres.ToList()
+                };
+                return View("New", moviesView);
+            }
             _context.Movies.Add(movie);
 
             _context.SaveChanges();

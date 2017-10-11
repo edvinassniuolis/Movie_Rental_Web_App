@@ -13,9 +13,12 @@ namespace Movie_Renta_Web_App.Models
 
         public Genre Genre { get; set; }
 
+        [Required]
         [Display(Name = "Genre")]
         public int GenreId { get; set; }
 
+        [Required]
+        [Range(1, 20)]
         [Display(Name = "Number in Stock")]
         public int Stock { get; set; }
 
