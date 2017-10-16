@@ -20,10 +20,10 @@ namespace Movie_Renta_Web_App.Controllers
             _context.Dispose();
         }
 
-        public ActionResult Index()
+        public ViewResult Index()
         {
-            var customerModel = new IndexCustomerModel { Customers = _context.Customers.Include(c => c.MembershipType).ToList() };
-            return View(customerModel);
+            //var customerModel = new IndexCustomerModel { Customers = _context.Customers.Include(c => c.MembershipType).ToList() };
+            return View(/*customerModel*/);
         }
 
         [ValidateAntiForgeryToken]
