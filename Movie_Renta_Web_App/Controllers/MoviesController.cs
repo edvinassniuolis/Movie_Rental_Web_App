@@ -20,15 +20,11 @@ namespace Movie_Renta_Web_App.Controllers
             _context.Dispose();
         }
 
-
         public ActionResult Index()
         {
-
-            var moviesViewModel = new IndexMovieModel
-            {
-                Movies = _context.Movies.Include(m => m.Genre).ToList()
-            };
-            return View(moviesViewModel);
+            if (User.IsInRole(RoleName.CanManageMovies))
+                return View("List");
+            return View("ReadOnlyList");
         }
 
         [Route("movies/details/{id}")]
@@ -42,6 +38,7 @@ namespace Movie_Renta_Web_App.Controllers
             return View(movie);
         }
 
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public ActionResult New()
         {
 

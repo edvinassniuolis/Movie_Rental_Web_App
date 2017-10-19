@@ -1,0 +1,45 @@
+﻿@model Movie_Renta_Web_App.ViewModels.IndexMovieModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="padding-top: 10px">
+    <table id="movies" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Movie</th>
+            <th>Genre</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+
+            var table = $("#movies").DataTable({
+                ajax: {
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    sAjaxDataProp: "",
+                    url: "/api/movies",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "name"
+                    },
+                    {
+                        data: "genre.name"
+                    },
+                ]
+            });
+        });
+    </script>
+}
